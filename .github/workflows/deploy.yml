@@ -1,10 +1,5 @@
 on:
-  workflow_call:
-    inputs:
-      script_path:
-        description: Path to the R script to execute
-        required: false
-        default: install-rwasm.R
+  workflow_call: {}
 
 name: Build and deploy WebR output
 
@@ -29,17 +24,6 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Resolve script path
-        id: resolve-script
-        shell: bash
-        run: |
-          SCRIPT_PATH="${{ inputs.script_path || 'install-rwasm.R' }}"
-          if [[ ! -f "$SCRIPT_PATH" ]]; then
-            echo "Script not found: $SCRIPT_PATH"
-            exit 1
-          fi
-          echo "script_path=$SCRIPT_PATH" >> "$GITHUB_OUTPUT"
-
       - name: Run R script in WebR container
         shell: bash
         run: |
@@ -50,7 +34,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/work" \
             -w /work \
             ghcr.io/r-wasm/webr:latest \
-            bash -lc "set -euo pipefail; Rscript /work/${{ steps.resolve-script.outputs.script_path }}"
+            bash -lc "set -euo pipefail; Rscript /work/install-rwasm.R"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
