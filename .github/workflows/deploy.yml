@@ -1,0 +1,65 @@
+on:
+  workflow_call:
+    inputs:
+      script_path:
+        description: Path to the R script to execute
+        required: false
+        default: install-rwasm.R
+
+name: Build and deploy WebR output
+
+jobs:
+  deploy-cran-repo:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: github-pages
+      cancel-in-progress: true
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Resolve script path
+        id: resolve-script
+        shell: bash
+        run: |
+          SCRIPT_PATH="${{ inputs.script_path || 'install-rwasm.R' }}"
+          if [[ ! -f "$SCRIPT_PATH" ]]; then
+            echo "Script not found: $SCRIPT_PATH"
+            exit 1
+          fi
+          echo "script_path=$SCRIPT_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Run R script in WebR container
+        shell: bash
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/public"
+
+          docker run --rm \
+            --platform linux/amd64 \
+            -v "$GITHUB_WORKSPACE:/work" \
+            -w /work \
+            ghcr.io/r-wasm/webr:latest \
+            bash -lc "set -euo pipefail; Rscript /work/${{ steps.resolve-script.outputs.script_path }}"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
