@@ -54,8 +54,8 @@ install.packages(local_pkg,
 rwasm::add_pkg(c(sprintf("beezdemand=local::%s", local_pkg), cran_packages),
                  repo_dir = repo_dir)
 
-#dir.create("/work", recursive = TRUE, showWarnings = FALSE)
+dir.create("public/webr", recursive = TRUE, showWarnings = FALSE)
 
-rwasm::make_vfs_library(out_dir = "/work",
+rwasm::make_vfs_library(out_dir = "public/webr",
                         out_name = "library.data",
                         repo_dir = repo_dir)
