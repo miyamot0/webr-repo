@@ -7,6 +7,7 @@ name: Build and deploy WebR output
 jobs:
   deploy-cran-repo:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     concurrency:
       group: github-pages
@@ -47,6 +48,6 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          timeout: 2400000
+          timeout: 1200000
           error_count: 5
           reporting_interval: 10000
