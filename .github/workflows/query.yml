@@ -5,13 +5,20 @@ on:
 name: Get Current Pages Artifact
 
 jobs:
-  print-files:
+  dump-logs:
     runs-on: ubuntu-latest
     steps:
-      - name: Output All Files to Console
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Output Everything to Console
         run: |
-          echo "=== DIRECTORY STRUCTURE ==="
-          ls -R ./public
+          echo "========================================="
+          echo "   COMPLETE RECURSIVE DIRECTORY TREE     "
+          echo "========================================="
+          find . -maxdepth 5 -not -path '*/.*'
           
-          echo "=== FILE CONTENTS ==="
-          find ./public -type f ! -name "*.tar" -exec echo -e "\n--- File: {} ---" \; -exec cat {} \;
+          echo "========================================="
+          echo "      RAW CONTENT OF EVERY SINGLE FILE   "
+          echo "========================================="
+          find . -maxdepth 5 -type f -not -path '*/.*' -exec echo -e "\n\n📂 [FILE PATH: {}]\n----------------------------------------" \; -exec cat {} \;
