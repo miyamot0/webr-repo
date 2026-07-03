@@ -11,7 +11,7 @@ jobs:
       - name: Output All Files to Console
         run: |
           echo "=== DIRECTORY STRUCTURE ==="
-          ls -R ./current-build
+          ls -R .
           
           echo "=== FILE CONTENTS ==="
-          find ./current-build -type f ! -name "*.tar" -exec echo -e "\n--- File: {} ---" \; -exec cat {} \;
+          find . -type f ! -name "*.tar" -exec echo -e "\n--- File: {} ---" \; -exec cat {} \;
