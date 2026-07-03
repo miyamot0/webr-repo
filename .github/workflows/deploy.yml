@@ -28,8 +28,6 @@ jobs:
       - name: Run R script in WebR container
         shell: bash
         run: |
-          mkdir -p "$GITHUB_WORKSPACE/public"
-
           docker run --rm \
             --platform linux/amd64 \
             -v "$GITHUB_WORKSPACE:/work" \
