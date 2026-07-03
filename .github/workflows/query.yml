@@ -1,0 +1,24 @@
+on:
+  workflow_call: {}
+  workflow_dispatch: {}
+
+name: Get Current Pages Artifact
+
+jobs:
+  download-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Pages Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: ./public
+
+      - name: Extract Files
+        run: tar -xvf ./public/artifact.tar -C ./public
+
+      - name: Upload Zip to GitHub Web UI
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-extracted-site-files
+          path: ./public/
