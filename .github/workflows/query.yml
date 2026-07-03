@@ -5,20 +5,22 @@ on:
 name: Get Current Pages Artifact
 
 jobs:
-  download-artifact:
+  print-files:
     runs-on: ubuntu-latest
     steps:
       - name: Download Pages Artifact
         uses: actions/download-artifact@v4
         with:
           name: github-pages
-          path: ./public
+          path: ./current-build
 
       - name: Extract Files
-        run: tar -xvf ./public/artifact.tar -C ./public
+        run: tar -xvf ./current-build/artifact.tar -C ./current-build
 
-      - name: Upload Zip to GitHub Web UI
-        uses: actions/upload-artifact@v4
-        with:
-          name: my-extracted-site-files
-          path: ./public/
+      - name: Output All Files to Console
+        run: |
+          echo "=== DIRECTORY STRUCTURE ==="
+          ls -R ./current-build
+          
+          echo "=== FILE CONTENTS ==="
+          find ./current-build -type f ! -name "*.tar" -exec echo -e "\n--- File: {} ---" \; -exec cat {} \;
