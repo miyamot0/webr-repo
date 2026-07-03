@@ -16,9 +16,4 @@ jobs:
           echo "========================================="
           echo "   COMPLETE RECURSIVE DIRECTORY TREE     "
           echo "========================================="
-          find . -maxdepth 5 -not -path '*/.*'
-          
-          echo "========================================="
-          echo "      RAW CONTENT OF EVERY SINGLE FILE   "
-          echo "========================================="
-          find . -maxdepth 5 -type f -not -path '*/.*' -exec echo -e "\n\n📂 [FILE PATH: {}]\n----------------------------------------" \; -exec cat {} \;
+          find . -maxdepth 5 -not -path '*/.*'         
